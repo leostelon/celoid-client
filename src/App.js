@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { WelcomeScreen } from './screens/Welcome';
 import { connectWalletToSite, getWalletAddress } from './utils/wallet';
 import { BsPerson } from "react-icons/bs"
+import { createUser } from './api/user';
 
 function App() {
   const [connectedToSite, setConnectedToSite] = useState(false);
@@ -15,7 +16,11 @@ function App() {
     await connectWalletToSite();
     const address = await getWalletAddress()
     if (address && address !== "") {
-      setConnectedToSite(true)
+      const token = localStorage.getItem("token");
+      if (!token || token === "") {
+        await createUser(address);
+        setConnectedToSite(true)
+      }
     }
   }
 
