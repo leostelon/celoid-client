@@ -1,5 +1,5 @@
 import "./Welcome.css";
-import { Box } from "@mui/system";
+import { Box } from "@mui/material";
 import React, { useEffect } from "react";
 import PlaneScult from "../assets/planesculpt.png";
 import { IoChevronForwardOutline } from "react-icons/io5";

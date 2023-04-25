@@ -1,9 +1,23 @@
-import { useEffect, useState } from 'react';
 import './App.css';
+import "./styles/navbar.css";
+
+import { Box } from "@mui/material";
+import { useEffect, useState } from 'react';
 import { WelcomeScreen } from './screens/Welcome';
+import { connectWalletToSite, getWalletAddress } from './utils/wallet';
+import { BsPerson } from "react-icons/bs"
 
 function App() {
+  const [connectedToSite, setConnectedToSite] = useState(false);
   const [isWelcomeScreen, setIsWelcomeScreen] = useState(false);
+
+  async function connectSite() {
+    await connectWalletToSite();
+    const address = await getWalletAddress()
+    if (address && address !== "") {
+      setConnectedToSite(true)
+    }
+  }
 
   function onCloseWelcome() {
     setIsWelcomeScreen(false);
@@ -14,6 +28,7 @@ function App() {
     if (isWelcome !== "true") {
       setIsWelcomeScreen(true);
     }
+    connectSite()
   }, [])
 
 
@@ -21,9 +36,25 @@ function App() {
     <div className="App">
       {isWelcomeScreen ? (
         <WelcomeScreen onCloseWelcome={onCloseWelcome} />
-      ) : (<p>
-        Hello World.
-      </p>)}
+      ) : (<div className="App">
+        <div className="navbar">
+          <div>
+            <h2>⚡Dedocker</h2>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {!connectedToSite ? <Box onClick={connectSite} className="upload-button">
+              Connect Wallet
+            </Box> : <Box className="profile-icon">
+              <BsPerson size={30} /> </Box>}
+          </div>
+        </div>
+      </div>)}
     </div>
   );
 }

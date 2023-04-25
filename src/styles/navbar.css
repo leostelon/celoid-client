@@ -1,0 +1,29 @@
+.navbar {
+	display: flex;
+	justify-content: space-between;
+	padding: 40px 256px;
+}
+
+.navbar .upload-button {
+	background-color: rgb(41, 91, 255);
+	color: white;
+	padding: 8px 16px;
+	border-radius: 4px;
+	font-weight: 600;
+	margin-right: 32px;
+	cursor: pointer;
+}
+
+.navbar .profile-icon {
+	padding: 8px;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	font-size: 18px;
+	border: 0.5px solid black;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
