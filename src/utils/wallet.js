@@ -1,4 +1,5 @@
 import Web3 from "web3";
+import { ChainsConfig } from "../constants";
 
 export async function connectWalletToSite() {
 	try {
@@ -22,6 +23,30 @@ export async function connectWalletToSite() {
 		return false;
 	}
 }
+
+export async function switchChain() {
+	const config = { ...ChainsConfig["CELO_TESTNET"] };
+	config.chainId = Web3.utils.toHex(ChainsConfig["CELO_TESTNET"].chainId);
+
+	try {
+		await window.ethereum.request({
+			method: "wallet_switchEthereumChain",
+			params: [{ chainId: config.chainId }],
+		});
+	} catch (error) {
+		if (error.code === 4902) {
+			try {
+				await window.ethereum.request({
+					method: "wallet_addEthereumChain",
+					params: [config],
+				});
+			} catch (addError) {
+				console.error(addError);
+			}
+		}
+	}
+}
+
 
 export async function getWalletAddress() {
 	try {
