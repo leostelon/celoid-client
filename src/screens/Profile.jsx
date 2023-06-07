@@ -10,16 +10,28 @@ import {
 import { MdDeleteOutline, MdOutlineImage } from "react-icons/md";
 import { AiOutlineDelete, AiOutlinePlus } from "react-icons/ai";
 import { deepPurple, purple } from "@mui/material/colors";
+import { useState } from "react";
+import AddLink from "../Components/AddLink";
 
 export default function Profile() {
+  const [openAddLink, setOpenAddLink] = useState(false);
   return (
     <div>
       <MainContainer>
+        {openAddLink && (
+          <AddLink
+            isOpen={openAddLink}
+            handleExternalClose={() => setOpenAddLink(false)}
+          />
+        )}
         <Holder>
           <ColorButton
             variant="contained"
             startIcon={<AiOutlinePlus />}
             sx={{}}
+            onClick={() => {
+              setOpenAddLink(true);
+            }}
           >
             Add Link
           </ColorButton>
@@ -68,6 +80,12 @@ export default function Profile() {
           ))}
         </Holder>
       </MainContainer>
+      {openAddLink && (
+        <AddLink
+          isOpen={openAddLink}
+          handleExternalClose={() => setOpenAddLink(false)}
+        />
+      )}
     </div>
   );
 }
