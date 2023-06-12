@@ -9,6 +9,7 @@ collection User {
   tokenId?: number;
   celo_id?: string;
   profile_image?: string;
+  bg_image?: string;
 
   constructor (id: string) {
     this.id = id;
@@ -23,10 +24,14 @@ collection User {
 
   updateNFT(tokenId: number, celo_id: string) {
      this.tokenId = tokenId;
-     this.celo_id = celo_id;
+     this.celo_id = true;
   }
 
   updateProfileImage(url: string) {
      this.profile_image = url;
+  }
+
+  updateBackgroundImage(url: string) {
+     this.bg_image = url;
   }
 }

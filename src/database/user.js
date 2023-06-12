@@ -72,6 +72,21 @@ export const updateProfilePic = async function (file) {
 	}
 };
 
+export const updateBackgroundPic = async function (file) {
+	try {
+		// Upload thumbnail
+		const imageResponse = await pinFileToIPFS(file);
+
+		const userAddress = await getWalletAddress();
+		const response = await collectionReference
+			.record(userAddress)
+			.call("updateBackgroundImage", [imageResponse]);
+		return response.data;
+	} catch (error) {
+		console.log(error.message);
+	}
+};
+
 export const updateNFT = async function (tokenId, celo_id) {
 	try {
 		const userAddress = await getWalletAddress();
