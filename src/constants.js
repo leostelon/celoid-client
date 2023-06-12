@@ -1,3 +1,5 @@
+export const PrimaryGrey = "#828488"
+
 export const ChainsConfig = {
 	CELO_TESTNET: {
 		chainId: 44787,
