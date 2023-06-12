@@ -1,7 +1,8 @@
 .navbar {
 	display: flex;
 	justify-content: space-between;
-	padding: 40px 256px;
+	padding: 16px;
+	width: 100%;
 }
 
 .navbar .upload-button {
@@ -26,4 +27,3 @@
 	align-items: center;
 	justify-content: center;
 }
-

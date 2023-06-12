@@ -18,6 +18,18 @@ export async function createLink(url, title) {
     }
 }
 
+export async function getLinks() {
+    try {
+        const address = localStorage.getItem("address");
+
+        const response = await collectionReference.where("user", "==", address).sort("timestamp", "desc").get();
+
+        return response.data;
+    } catch (err) {
+        console.log(err.message)
+    }
+}
+
 export async function updateImage(id, image) {
     try {
         const imageUrl = await pinFileToIPFS(image)
