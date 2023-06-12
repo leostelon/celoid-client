@@ -34,7 +34,7 @@ export default function AddLink({ isOpen, handleExternalClose }) {
 	}, [isOpen]);
 
 	return (
-		<Dialog open={open} minWidth="md" onClose={handleClose}>
+		<Dialog open={open} onClose={handleClose}>
 			<Box
 				sx={{
 					p: 2,

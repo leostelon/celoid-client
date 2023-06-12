@@ -21,11 +21,16 @@ export default function Profile() {
 	const [links, setLinks] = useState([]);
 	const [loading, setLoading] = useState(false);
 
+	async function linkExternalclose() {
+		setOpenAddLink(false);
+		gL();
+	}
+
 	async function gL() {
-		setLoading(true)
+		setLoading(true);
 		const response = await getLinks();
 		setLinks(response);
-		setLoading(false)
+		setLoading(false);
 	}
 
 	useEffect(() => {
@@ -39,7 +44,7 @@ export default function Profile() {
 				{openAddLink && (
 					<AddLink
 						isOpen={openAddLink}
-						handleExternalClose={() => setOpenAddLink(false)}
+						handleExternalClose={linkExternalclose}
 					/>
 				)}
 				<Holder>
@@ -111,7 +116,7 @@ export default function Profile() {
 			{openAddLink && (
 				<AddLink
 					isOpen={openAddLink}
-					handleExternalClose={() => setOpenAddLink(false)}
+					handleExternalClose={linkExternalclose}
 				/>
 			)}
 		</div>
