@@ -22,7 +22,7 @@ collection Link {
   }
 
   function incrementClick() {
-    this.click += this.click;
+    this.clicks += 1;
   }
 
   function updateImage(image: string) {
