@@ -1,29 +1,36 @@
 import {
 	Box,
-	Button,
 	IconButton,
 	InputBase,
 	Skeleton,
 	Switch,
 	styled,
 } from "@mui/material";
-
+import "../styles/Profile.css";
 import { MdDeleteOutline, MdOutlineImage } from "react-icons/md";
-import { AiOutlinePlus } from "react-icons/ai";
-import { deepPurple, purple } from "@mui/material/colors";
+import { AiOutlineLink, AiOutlinePicture, AiOutlinePlus } from "react-icons/ai";
+import { BsPerson } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import AddLink from "../Components/AddLink";
 import { Navbar } from "../Components/Navbar";
-import { getLinks } from "../database/link";
+import { deleteLink, getLinks } from "../database/link";
+import { getUser } from "../database/user";
 
 export default function Profile() {
 	const [openAddLink, setOpenAddLink] = useState(false);
 	const [links, setLinks] = useState([]);
 	const [loading, setLoading] = useState(false);
+	const [user, setUser] = useState();
 
 	async function linkExternalclose() {
 		setOpenAddLink(false);
 		gL();
+	}
+
+	async function gU() {
+		const address = localStorage.getItem("address");
+		const user = await getUser(address);
+		setUser(user);
 	}
 
 	async function gL() {
@@ -35,6 +42,7 @@ export default function Profile() {
 
 	useEffect(() => {
 		gL();
+		gU();
 	}, []);
 
 	return (
@@ -48,7 +56,7 @@ export default function Profile() {
 					/>
 				)}
 				<Holder>
-					<ColorButton
+					{/* <ColorButton
 						variant="contained"
 						startIcon={<AiOutlinePlus />}
 						sx={{}}
@@ -57,7 +65,53 @@ export default function Profile() {
 						}}
 					>
 						Add Link
-					</ColorButton>
+					</ColorButton> */}
+					<Box
+						sx={{
+							display: "flex",
+							width: "100%",
+							justifyContent: "space-between",
+							alignItems: "center",
+							m: "12px 0px",
+						}}
+					>
+						<Box display="flex">
+							<Box className="box-icon">
+								<Box className="box-icon-icon">
+									<BsPerson />
+								</Box>
+								Profile Image
+							</Box>
+							<Box className="box-icon">
+								<Box className="box-icon-icon">
+									<AiOutlinePicture />
+								</Box>
+								Background
+							</Box>
+							<Box
+								className="box-icon"
+								onClick={() => {
+									setOpenAddLink(true);
+								}}
+							>
+								<Box className="box-icon-icon">
+									<AiOutlinePlus />
+								</Box>
+								Add Link
+							</Box>
+						</Box>
+						<Box>
+							<Box
+								className="box-icon"
+								onClick={() => window.open(`/${user ? user.celo_id : ""}`)}
+							>
+								<Box className="box-icon-icon">
+									<AiOutlineLink />
+								</Box>
+								<p>Preview</p>
+							</Box>
+						</Box>
+					</Box>
 					{loading
 						? Array.from({ length: 5 }).map((_, i) => (
 								<Skeleton
@@ -104,7 +158,13 @@ export default function Profile() {
 											<Box>{a.data.clicks} clicks</Box>
 										</Box>
 										<Box>
-											<IconButton aria-label="delete">
+											<IconButton
+												aria-label="delete"
+												onClick={async () => {
+													await deleteLink(a.data.id);
+													gL();
+												}}
+											>
 												<MdDeleteOutline />
 											</IconButton>
 										</Box>
@@ -114,17 +174,14 @@ export default function Profile() {
 				</Holder>
 			</MainContainer>
 			{openAddLink && (
-				<AddLink
-					isOpen={openAddLink}
-					handleExternalClose={linkExternalclose}
-				/>
+				<AddLink isOpen={openAddLink} handleExternalClose={linkExternalclose} />
 			)}
 		</div>
 	);
 }
 
 const MainContainer = styled(Box)({
-	backgroundColor: "#f3f3f1",
+	backgroundColor: "#F3F3F1",
 	width: "100%",
 	display: "flex",
 	flexDirection: "column",
@@ -161,20 +218,6 @@ const LinkDescription = styled(Box)({
 	alignItems: "center",
 	flexWrap: "wrap",
 });
-
-const ColorButton = styled(Button)(({ theme }) => ({
-	color: theme.palette.getContrastText(purple[500]),
-	backgroundColor: deepPurple[500],
-	"&:hover": {
-		backgroundColor: deepPurple[700],
-	},
-	width: "100%",
-	margin: "16px 0",
-	borderRadius: "28px",
-	padding: "12px",
-	fontSize: "16px",
-	fontWeight: "600",
-}));
 
 const IOSSwitch = styled((props) => (
 	<Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />

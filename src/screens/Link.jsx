@@ -49,17 +49,19 @@ export default function Link() {
 						/>
 					</Box>
 				)}
-				<Box
-					sx={{
-						pt: 3,
-						fontSize: "20px",
-						fontWeight: "500",
-						mb: "16px",
-						color: "white",
-					}}
-				>
-					@{user.celo_id}
-				</Box>
+				{!loading && (
+					<Box
+						sx={{
+							pt: 3,
+							fontSize: "20px",
+							fontWeight: "500",
+							mb: "16px",
+							color: "white",
+						}}
+					>
+						@{user.celo_id}
+					</Box>
+				)}
 
 				{loading ? (
 					<Box
@@ -78,8 +80,9 @@ export default function Link() {
 						))}
 					</Box>
 				) : (
-					links.map((l) => (
+					links.map((l, i) => (
 						<LinkContainer
+							key={i}
 							onClick={async () => {
 								await getLink(l.data.id);
 								window.open(l.data.url, "_blank");

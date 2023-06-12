@@ -23,7 +23,7 @@ export async function getLinks() {
     try {
         const address = localStorage.getItem("address");
 
-        const response = await collectionReference.record("user", "==", address).sort("timestamp", "desc").get();
+        const response = await collectionReference.where("user", "==", address).sort("timestamp", "desc").get();
 
         return response.data;
     } catch (err) {
@@ -75,6 +75,16 @@ export async function updateUrl(id, url) {
 export async function updateTitle(id, title) {
     try {
         const response = await collectionReference.record(id).call("updateTitle", [title]);
+
+        return response;
+    } catch (err) {
+        console.log(err.message)
+    }
+}
+
+export async function deleteLink(linkId) {
+    try {
+        const response = await collectionReference.record(linkId).call("del", []);
 
         return response;
     } catch (err) {
