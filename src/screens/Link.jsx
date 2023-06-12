@@ -97,9 +97,13 @@ const LinkContainer = styled(Box)({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
+
+  cursor: "pointer",
 });
 
 const LinkImg = styled(Box)({
   width: "50px",
   height: "50px",
+  minWidth: "50px",
+  minHeight: "50px",
 });
