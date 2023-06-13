@@ -19,20 +19,28 @@ import {
 } from "react-icons/ai";
 
 import { toast } from "react-toastify";
-import { updateMasaId } from "../database/user";
+import { getUser, updateMasaId } from "../database/user";
 import { masa } from "../utils/masa";
 import { switchChain } from "../utils/wallet";
+import { PrimaryGrey } from "../constants";
 
 export const Navbar = () => {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
 	const [tooltipOpen, setTooltipOpen] = useState(false);
+	const [user, setUser] = useState();
 
 	const navigate = useNavigate();
 	const username = localStorage.getItem("address");
 	const [connectedToSite, setConnectedToSite] = useState(false);
 
 	const [openLoading, setOpenLoading] = useState(false);
+
+	async function gU() {
+		const address = localStorage.getItem("address");
+		const user = await getUser(address);
+		setUser(user);
+	}
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -62,7 +70,7 @@ export const Navbar = () => {
 		try {
 			setOpenLoading(true);
 			await switchChain();
-			const soulNames = await masa.soulName.loadSoulNames(
+			const soulNames = await masa().soulName.loadSoulNames(
 				"0xCB171Eb1b9bb01763326d1D842f3b5C6422Fdec9"
 			);
 
@@ -73,7 +81,7 @@ export const Navbar = () => {
 					type: "success",
 				});
 			} else {
-				toast(`No soul names for ${getShortAddress(username)}`, {
+				toast(`No soul names found for ${getShortAddress(username)}`, {
 					type: "warning",
 				});
 			}
@@ -86,6 +94,7 @@ export const Navbar = () => {
 
 	useEffect(() => {
 		connectSite();
+		gU();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -196,7 +205,9 @@ export const Navbar = () => {
 									onClick={handleClick}
 								></Box>
 								<Box sx={{ fontWeight: "bold", ml: "6px" }}>
-									{getShortAddress(username)}
+									{user && user.masa_id
+										? user.masa_id + ".celo"
+										: getShortAddress(username)}
 								</Box>
 							</Box>
 							<Menu
@@ -242,6 +253,24 @@ export const Navbar = () => {
 										Logout
 									</p>
 								</MenuItem>
+								<Box
+									sx={{
+										fontSize: "10px",
+										color: PrimaryGrey,
+										textAlign: "center",
+									}}
+								>
+									Names and Avatars
+									<br /> powered by{" "}
+									<span
+										style={{ color: "blue", cursor: "pointer" }}
+										onClick={() =>
+											window.open("https://masa.finance/", "_blank")
+										}
+									>
+										Masa
+									</span>
+								</Box>
 							</Menu>
 						</Box>
 					)}

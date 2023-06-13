@@ -25,7 +25,7 @@ collection User {
 
   updateNFT(tokenId: number, celo_id: string) {
      this.tokenId = tokenId;
-     this.celo_id = true;
+     this.celo_id = celo_id;
   }
 
   updateMasaId(masa_id: string) {
