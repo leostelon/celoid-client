@@ -8,6 +8,7 @@ collection User {
   token?: string;
   tokenId?: number;
   celo_id?: string;
+  masa_id?: string;
   profile_image?: string;
   bg_image?: string;
 
@@ -25,6 +26,10 @@ collection User {
   updateNFT(tokenId: number, celo_id: string) {
      this.tokenId = tokenId;
      this.celo_id = true;
+  }
+
+  updateMasaId(masa_id: string) {
+     this.masa_id = masa_id;
   }
 
   updateProfileImage(url: string) {

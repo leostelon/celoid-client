@@ -1,24 +1,52 @@
 import "../styles/navbar.css";
 import React, { useEffect, useState } from "react";
-import { Box, Menu, MenuItem } from "@mui/material";
-import { HiOutlineBell, HiOutlineLogout } from "react-icons/hi";
+import {
+	Box,
+	CircularProgress,
+	Dialog,
+	Menu,
+	MenuItem,
+	Tooltip,
+} from "@mui/material";
+import { HiOutlineLogout } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-import { MdOutlinePersonOutline } from "react-icons/md";
 import NoProfilePicture from "../assets/default-profile-icon.png";
 import { getShortAddress } from "../utils/addressShort";
+import {
+	AiOutlineDollarCircle,
+	AiOutlineLink,
+	AiOutlineShareAlt,
+} from "react-icons/ai";
+
+import { toast } from "react-toastify";
+import { updateMasaId } from "../database/user";
+import { masa } from "../utils/masa";
+import { switchChain } from "../utils/wallet";
 
 export const Navbar = () => {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
+	const [tooltipOpen, setTooltipOpen] = useState(false);
+
 	const navigate = useNavigate();
 	const username = localStorage.getItem("address");
 	const [connectedToSite, setConnectedToSite] = useState(false);
+
+	const [openLoading, setOpenLoading] = useState(false);
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
 	const handleClose = () => {
 		setAnchorEl(null);
+	};
+
+	const handleTooltipClose = () => {
+		setTooltipOpen(false);
+	};
+
+	const handleTooltipOpen = () => {
+		setTooltipOpen(true);
 	};
 
 	async function connectSite() {
@@ -28,6 +56,32 @@ export const Navbar = () => {
 			return navigate("/welcome");
 		}
 		setConnectedToSite(true);
+	}
+
+	async function linkCeloId() {
+		try {
+			setOpenLoading(true);
+			await switchChain();
+			const soulNames = await masa.soulName.loadSoulNames(
+				"0xCB171Eb1b9bb01763326d1D842f3b5C6422Fdec9"
+			);
+
+			if (soulNames.length > 0) {
+				toast(`Linking ${soulNames[0]}.celo to Celinks🌴`, { type: "info" });
+				await updateMasaId(soulNames[0]);
+				toast(`Succesffuly linked ${soulNames[0]}.celo to Celinks🌴`, {
+					type: "success",
+				});
+			} else {
+				toast(`No soul names for ${getShortAddress(username)}`, {
+					type: "warning",
+				});
+			}
+			setOpenLoading(false);
+		} catch (error) {
+			console.log(error);
+			setOpenLoading(false);
+		}
 	}
 
 	useEffect(() => {
@@ -46,6 +100,28 @@ export const Navbar = () => {
 				borderBottom: "1px solid #f5f5f5",
 			}}
 		>
+			<Dialog
+				fullWidth
+				maxWidth="xs"
+				open={openLoading}
+				PaperProps={{
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
+					},
+				}}
+			>
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+						height: "100px",
+					}}
+				>
+					<CircularProgress sx={{ color: "white" }} />
+				</Box>
+			</Dialog>
 			<div className="navbar">
 				<div>
 					<h1>Celinks🌴</h1>
@@ -57,23 +133,50 @@ export const Navbar = () => {
 						justifyContent: "center",
 					}}
 				>
-					<Box
-						mr={3}
-						sx={{ display: "flex", position: "relative", cursor: "pointer" }}
-						id="sdk-trigger-id"
-					>
-						<HiOutlineBell size={24} color="#828488" />
+					<Box mr={3} sx={{ display: "flex", position: "relative" }}>
 						<Box
+							className="box-icon"
 							sx={{
-								position: "absolute",
-								color: "red",
-								size: "50px",
-								top: "-8px",
-								right: 0,
+								position: "relative",
+								backgroundColor: "rgb(230, 230, 230)",
 							}}
+							onClick={linkCeloId}
 						>
-							●
+							<Box className="box-icon-icon">
+								<AiOutlineLink />
+							</Box>
+							Link .celo
+							<Box
+								sx={{
+									position: "absolute",
+									fontSize: "10px",
+									padding: "4px",
+									borderRadius: "4px",
+								}}
+								className="colorful"
+							>
+								new
+							</Box>
 						</Box>
+						<Box className="nav-icon">
+							<AiOutlineDollarCircle />
+						</Box>
+						<Tooltip
+							title="Profile link copied!"
+							placement="top"
+							open={tooltipOpen}
+							onClose={handleTooltipClose}
+						>
+							<Box
+								className="nav-icon"
+								onClick={() => {
+									navigator.clipboard.writeText(username);
+									handleTooltipOpen();
+								}}
+							>
+								<AiOutlineShareAlt />
+							</Box>
+						</Tooltip>
 					</Box>
 					{!connectedToSite ? (
 						<Box onClick={connectSite} className="upload-button">
@@ -114,22 +217,6 @@ export const Navbar = () => {
 									horizontal: "right",
 								}}
 							>
-								<MenuItem
-									onClick={() => {
-										const address = localStorage.getItem("address");
-										navigate("/profile/" + address);
-										setAnchorEl(null);
-									}}
-								>
-									<MdOutlinePersonOutline color="#828488" size={20} />
-									<p
-										style={{
-											fontSize: "14px",
-										}}
-									>
-										Change Profile
-									</p>
-								</MenuItem>
 								<MenuItem
 									onClick={() => {
 										localStorage.clear();

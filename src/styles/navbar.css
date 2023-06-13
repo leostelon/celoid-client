@@ -30,3 +30,40 @@
 	align-items: center;
 	justify-content: center;
 }
+
+.nav-icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 18px;
+	padding: 6px;
+	margin: 0 4px;
+	cursor: pointer;
+	border-radius: 6px;
+	color: rgb(103, 107, 95);
+}
+
+.nav-icon:hover {
+	background-color: rgb(230, 230, 230);
+	color: rgb(91, 95, 84);
+}
+
+.colorful {
+	cursor: pointer;
+	background-image: linear-gradient(
+		-45deg,
+		#d80735,
+		#ee005d,
+		#fe1488,
+		#ff38b7,
+		#ff59e7
+	);
+	border-radius: 20px;
+	padding: 12px 32px;
+	animation: hue 5s ease-in-out infinite;
+	-moz-animation: hue 5s ease-in-out infinite;
+	-webkit-animation: hue 5s ease-in-out infinite;
+	top: -4px;
+	right: 0;
+	color: white;
+}

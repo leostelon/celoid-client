@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import "../styles/Profile.css";
 import { MdDeleteOutline, MdOutlineImage } from "react-icons/md";
-import { AiOutlineLink, AiOutlinePicture, AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineArrowsAlt, AiOutlinePicture, AiOutlinePlus } from "react-icons/ai";
 import { BsPerson } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import AddLink from "../Components/AddLink";
@@ -106,7 +106,7 @@ export default function Profile() {
 								onClick={() => window.open(`/${user ? user.celo_id : ""}`)}
 							>
 								<Box className="box-icon-icon">
-									<AiOutlineLink />
+									<AiOutlineArrowsAlt />
 								</Box>
 								<p>Preview</p>
 							</Box>
