@@ -14,7 +14,12 @@ import { useEffect, useState } from "react";
 import AddLink from "../Components/AddLink";
 import { Navbar } from "../Components/Navbar";
 import { deleteLink, getLinks } from "../database/link";
-import { getUser } from "../database/user";
+import {
+	getUser,
+	updateBackgroundPic,
+	updateProfilePic,
+} from "../database/user";
+import { toast } from "react-toastify";
 
 export default function Profile() {
 	const [openAddLink, setOpenAddLink] = useState(false);
@@ -44,6 +49,29 @@ export default function Profile() {
 		gL();
 		gU();
 	}, []);
+
+	const updateProfileImage = async (e) => {
+		if (e.target.files[0]?.type?.split("/")[0] !== "image")
+			toast("Please select a file with type image!");
+		else {
+			// setProfileImageLoading(true);
+			await updateProfilePic(e.target.files[0]);
+			await gU();
+			// setProfileImageLoading(false);
+			toast("Profile Image Updated Successfully!");
+		}
+	};
+	const updateProfileBgImage = async (e) => {
+		if (e.target.files[0]?.type?.split("/")[0] !== "image")
+			toast("Please select a file with type image!");
+		else {
+			// setProfileBgImageLoading(true);
+			await updateBackgroundPic(e.target.files[0]);
+			await gU();
+			// setProfileBgImageLoading(false);
+			toast("Background Image Updated Successfully!");
+		}
+	};
 
 	return (
 		<div>
@@ -76,20 +104,39 @@ export default function Profile() {
 						}}
 					>
 						<Box display="flex">
-							<Box className="box-icon">
-								<Box className="box-icon-icon">
-									<BsPerson />
+							<IconButton
+								sx={{
+									borderRadius: "6px",
+								}}
+								component="label"
+								onChange={updateProfileImage}
+							>
+								<Box className="box-icon">
+									<Box className="box-icon-icon">
+										<BsPerson />
+									</Box>
+									Profile Image
 								</Box>
-								Profile Image
-							</Box>
-							<Box className="box-icon">
-								<Box className="box-icon-icon">
-									<AiOutlinePicture />
+								<input type="file" hidden />
+							</IconButton>
+							<IconButton
+								sx={{
+									borderRadius: "6px",
+								}}
+								component="label"
+								onChange={updateProfileBgImage}
+							>
+								<Box className="box-icon">
+									<Box className="box-icon-icon">
+										<AiOutlinePicture />
+									</Box>
+									Background
 								</Box>
-								Background
-							</Box>
+								<input type="file" hidden />
+							</IconButton>
+
 							<Box
-								className="box-icon"
+								className="box-icon box-icon-hover"
 								onClick={() => {
 									setOpenAddLink(true);
 								}}
@@ -102,7 +149,7 @@ export default function Profile() {
 						</Box>
 						<Box>
 							<Box
-								className="box-icon"
+								className="box-icon box-icon-hover"
 								onClick={() => window.open(`/${user ? user.celo_id : ""}`)}
 							>
 								<Box className="box-icon-icon">
@@ -132,7 +179,9 @@ export default function Profile() {
 														fontWeight: "bold",
 													}}
 													value={a.data.title}
-													inputProps={{ "aria-label": "Twitter" }}
+													inputProps={{
+														"aria-label": "Twitter",
+													}}
 												/>
 											</Box>
 											<Box sx={{ fontSize: "16px" }}>
@@ -142,7 +191,9 @@ export default function Profile() {
 														width: "100%",
 													}}
 													value={a.data.url}
-													inputProps={{ "aria-label": "Twitter" }}
+													inputProps={{
+														"aria-label": "Twitter",
+													}}
 												/>
 											</Box>
 										</Box>
@@ -151,7 +202,12 @@ export default function Profile() {
 										</Box>
 									</LinkDescription>
 									<LinkDescription>
-										<Box sx={{ display: "flex", alignItems: "center" }}>
+										<Box
+											sx={{
+												display: "flex",
+												alignItems: "center",
+											}}
+										>
 											<IconButton aria-label="delete">
 												<MdOutlineImage />
 											</IconButton>
@@ -181,6 +237,7 @@ export default function Profile() {
 }
 
 const MainContainer = styled(Box)({
+	backgroundColor: "black",
 	backgroundColor: "#F3F3F1",
 	width: "100%",
 	display: "flex",
