@@ -46,7 +46,11 @@ export async function getLink(id) {
 
 export async function getLinksWithId(celo_id) {
 	try {
-		const response = await userReference.where("celo_id", "==", celo_id).get();
+		celo_id = celo_id.replace(".celo", "");
+		let response = await userReference.where("masa_id", "==", celo_id).get();
+		if (response.data.length === 0) {
+			response = await userReference.where("celo_id", "==", celo_id).get();
+		}
 		const links = await collectionReference
 			.where("user", "==", response.data[0].data.id)
 			.sort("timestamp", "desc")

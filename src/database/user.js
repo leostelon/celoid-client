@@ -98,3 +98,15 @@ export const updateNFT = async function (tokenId, celo_id) {
 		console.log(error.message);
 	}
 };
+
+export const updateMasaId = async function (masa_id) {
+	try {
+		const userAddress = await getWalletAddress();
+		const response = await collectionReference
+			.record(userAddress)
+			.call("updateMasaId", [masa_id]);
+		return response.data;
+	} catch (error) {
+		console.log(error.message);
+	}
+};
