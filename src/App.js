@@ -5,6 +5,8 @@ import Main from "./screens/Main";
 import Profile from "./screens/Profile";
 import { Route, Routes } from "react-router-dom";
 import Link from "./screens/Link";
+const { OdisUtils } = require("@celo/identity");
+
 
 function App() {
   return (
